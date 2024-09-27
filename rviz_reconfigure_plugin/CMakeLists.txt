@@ -120,6 +120,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${Qt5Widgets_INCLUDE_DIRS}
+  ${rqt_reconfigure_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
