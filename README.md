@@ -1,6 +1,6 @@
-# ROS Packages for plugins
+# ROS Packages for ROS Plugin
 
-## 1. Package hfd_driver
+## 1. Package rviz_reconfigure_plugin
 
-> Function: Provide the lib and driver for accessing the hfd.<br>
-> Launch: roslaunch hfd_driver hfd_query_state.launch
+> Function: Integrate the rqt_reconfigure into RViz for parameter dynamic reconfiguration.<br>
+> Launch: Add the plugin into the plugin list of rviz.
