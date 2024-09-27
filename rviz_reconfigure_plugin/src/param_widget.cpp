@@ -27,7 +27,7 @@ ParamWidget::ParamWidget(QWidget* parent) : QWidget(parent) {
 
 void ParamWidget::updateParams()
 {
-  td::string node_name = node_name_edit_->text().toStdString();
+  std::string node_name = node_name_edit_->text().toStdString();
   
   client_.reset(new dynamic_reconfigure::Client<dynamic_reconfigure::Config>(node_name));
 
