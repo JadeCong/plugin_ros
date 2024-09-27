@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <ros/ros.h>
 #include <dynamic_reconfigure/client.h>
-#include <dynamic_reconfigure/Reconfigure.h>
 
 namespace rviz_reconfigure_plugin {
 
@@ -27,8 +26,6 @@ private:
   QLineEdit* node_name_edit_;
   QPushButton* update_button_;
   QTreeWidget* param_tree_;
-  ros::NodeHandle nh_;
-  std::unique_ptr<dynamic_reconfigure::Client<dynamic_reconfigure::Config>> client_;
   std::map<std::string, QTreeWidgetItem*> param_items_;
 };
 

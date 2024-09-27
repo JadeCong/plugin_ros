@@ -29,18 +29,18 @@ void ParamWidget::updateParams()
 {
   std::string node_name = node_name_edit_->text().toStdString();
   
-  client_.reset(new dynamic_reconfigure::Client<dynamic_reconfigure::Config>(node_name));
-
   // 使用 ros::Duration 来设置超时
   ros::Duration timeout(5.0);  // 5秒超时
   ros::Time start_time = ros::Time::now();
 
   while (ros::Time::now() - start_time < timeout)
   {
-    dynamic_reconfigure::Config config;
-    if (client_->getDefaultConfiguration(config))
+    dynamic_reconfigure::ReconfigureRequest req;
+    dynamic_reconfigure::ReconfigureResponse res;
+
+    if (ros::service::call(node_name + "/set_parameters", req, res))
     {
-      updateParamTree(config);
+      updateParamTree(res.config);
       return;
     }
     ros::Duration(0.1).sleep();  // 等待100ms后重试
@@ -87,40 +87,38 @@ void ParamWidget::updateParamTree(const dynamic_reconfigure::Config& config) {
 }
 
 void ParamWidget::onItemChanged(QTreeWidgetItem* item, int column) {
-  if (column != 1 || !client_) return;
+  if (column != 1) return;
 
-  std::string name = item->text(0).toStdString();
+  std::string node_name = node_name_edit_->text().toStdString();
+  std::string param_name = item->text(0).toStdString();
   std::string value = item->text(1).toStdString();
 
-  dynamic_reconfigure::Config conf;
+  dynamic_reconfigure::ReconfigureRequest req;
+  dynamic_reconfigure::ReconfigureResponse res;
 
   if (item->checkState(1) != Qt::PartiallyChecked)
   {
     dynamic_reconfigure::BoolParameter bool_param;
-    bool_param.name = name;
+    bool_param.name = param_name;
     bool_param.value = (item->checkState(1) == Qt::Checked);
-    conf.bools.push_back(bool_param);
+    req.config.bools.push_back(bool_param);
   }
   else if (item->text(1).contains('.'))
   {
     dynamic_reconfigure::DoubleParameter double_param;
-    double_param.name = name;
+    double_param.name = param_name;
     double_param.value = value.empty() ? 0 : std::stod(value);
-    conf.doubles.push_back(double_param);
+    req.config.doubles.push_back(double_param);
   }
   else
   {
     dynamic_reconfigure::IntParameter int_param;
-    int_param.name = name;
+    int_param.name = param_name;
     int_param.value = value.empty() ? 0 : std::stoi(value);
-    conf.ints.push_back(int_param);
+    req.config.ints.push_back(int_param);
   }
 
-  dynamic_reconfigure::ReconfigureRequest req;
-  dynamic_reconfigure::ReconfigureResponse res;
-  req.config = conf;
-
-  if (!ros::service::call(client_->getName() + "/set_parameters", req, res))
+  if (!ros::service::call(node_name + "/set_parameters", req, res))
   {
     QMessageBox::warning(this, "Error", "Failed to update parameter.");
   }
