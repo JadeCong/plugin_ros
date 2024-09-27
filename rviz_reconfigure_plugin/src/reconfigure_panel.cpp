@@ -1,13 +1,12 @@
 #include "rviz_reconfigure_plugin/reconfigure_panel.h"
-
 #include <QVBoxLayout>
 
 namespace rviz_reconfigure_plugin {
 
 ReconfigurePanel::ReconfigurePanel(QWidget* parent) : rviz::Panel(parent) {
   QVBoxLayout* layout = new QVBoxLayout;
-  param_client_widget_ = new rqt_reconfigure::ParamClientWidget(this);
-  layout->addWidget(param_client_widget_);
+  param_widget_ = new ParamWidget(this);
+  layout->addWidget(param_widget_);
   setLayout(layout);
 }
 

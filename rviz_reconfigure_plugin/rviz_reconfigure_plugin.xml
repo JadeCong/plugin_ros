@@ -1,7 +1,7 @@
 <library path="lib/librviz_reconfigure_plugin">
     <class name="rviz_reconfigure_plugin/ReconfigurePanel" type="rviz_reconfigure_plugin::ReconfigurePanel" base_class_type="rviz::Panel">
         <description>
-            A panel widget combining RViz with rqt_reconfigure.
+            A panel widget for dynamic reconfigure in RViz.
         </description>
     </class>
 </library>

@@ -9,8 +9,9 @@ project(rviz_reconfigure_plugin)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   pluginlib
-  rqt_reconfigure
+  dynamic_reconfigure
   rviz
+  qt_gui_cpp
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +107,7 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES rviz_reconfigure_plugin
-  CATKIN_DEPENDS pluginlib rqt_reconfigure rviz
+  CATKIN_DEPENDS pluginlib dynamic_reconfigure rviz qt_gui_cpp
 #  DEPENDS system_lib
 )
 
@@ -119,10 +120,8 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${Qt5Widgets_INCLUDE_DIRS}
-  # ${rqt_reconfigure_INCLUDE_DIRS}
-  ${CMAKE_SOURCE_DIR}/rqt_reconfigure/include
 )
+set(CMAKE_AUTOMOC ON)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -130,14 +129,13 @@ include_directories(
 # )
 add_library(${PROJECT_NAME}
   src/reconfigure_panel.cpp
+  src/param_widget.cpp
 )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_definitions(${Qt5Widgets_DEFINITIONS})
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -195,9 +193,6 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
-install(FILES rviz_reconfigure_plugin.xml
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -205,6 +200,9 @@ install(FILES rviz_reconfigure_plugin.xml
 #   FILES_MATCHING PATTERN "*.h"
 #   PATTERN ".svn" EXCLUDE
 # )
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
@@ -212,6 +210,9 @@ install(FILES rviz_reconfigure_plugin.xml
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+install(FILES rviz_reconfigure_plugin.xml
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 #############
 ## Testing ##

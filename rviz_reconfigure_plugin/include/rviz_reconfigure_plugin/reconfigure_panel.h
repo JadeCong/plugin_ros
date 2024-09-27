@@ -3,10 +3,7 @@
 
 #include <ros/ros.h>
 #include <rviz/panel.h>
-// #include <rqt_reconfigure/param_client_widget.h>
-#include "rqt_reconfigure/param_client_widget.h"
-#include <QWidget>
-#include <QVBoxLayout>
+#include "param_widget.h"
 
 namespace rviz_reconfigure_plugin {
 
@@ -19,7 +16,7 @@ public:
   virtual void save(rviz::Config config) const;
 
 protected:
-  rqt_reconfigure::ParamClientWidget* param_client_widget_;
+  ParamWidget* param_widget_;
 };
 
 } // end namespace rviz_reconfigure_plugin
