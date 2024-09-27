@@ -3,7 +3,8 @@
 
 #include <ros/ros.h>
 #include <rviz/panel.h>
-#include <rqt_reconfigure/param_client_widget.h>
+// #include <rqt_reconfigure/param_client_widget.h>
+#include "rqt_reconfigure/param_client_widget.h"
 #include <QWidget>
 #include <QVBoxLayout>
 

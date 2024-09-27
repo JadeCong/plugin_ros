@@ -120,7 +120,8 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${Qt5Widgets_INCLUDE_DIRS}
-  ${rqt_reconfigure_INCLUDE_DIRS}
+  # ${rqt_reconfigure_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/rqt_reconfigure/include
 )
 
 ## Declare a C++ library
