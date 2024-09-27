@@ -1,0 +1,23 @@
+# Linux OS Misc
+# *.so
+*.out
+
+# macOS Misc
+.DS_Store
+
+# Windows OS Misc
+*.db
+*.ini
+*.dll
+*.exe
+
+# IDE Config Misc
+.vscode/
+.idea/
+.vscode
+
+# Project Config Misc
+build/
+install/
+logs/
+__pycache__/
