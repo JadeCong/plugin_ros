@@ -27,21 +27,30 @@ ParamWidget::ParamWidget(QWidget* parent) : QWidget(parent) {
 
 void ParamWidget::updateParams()
 {
-  std::string node_name = node_name_edit_->text().toStdString();
+  td::string node_name = node_name_edit_->text().toStdString();
+  
   client_.reset(new dynamic_reconfigure::Client<dynamic_reconfigure::Config>(node_name));
 
   // 使用 ros::Duration 来设置超时
   ros::Duration timeout(5.0);  // 5秒超时
-  if (client_->waitForServer(timeout)) {
-    dynamic_reconfigure::Config config;
-    if (client_->get(config)) {
-      updateParamTree(config);
-    } else {
-      QMessageBox::warning(this, "Error", "Failed to get configuration from node.");
+  ros::Time start_time = ros::Time::now();
+
+  while (ros::Time::now() - start_time < timeout)
+  {
+    if (client_->getCurrentConfiguration())
+    {
+      dynamic_reconfigure::Config config;
+      if (client_->getCurrentConfiguration(config))
+      {
+        updateParamTree(config);
+        return;
+      }
     }
-  } else {
-    QMessageBox::warning(this, "Error", QString("Failed to connect to node %1").arg(QString::fromStdString(node_name)));
+    ros::Duration(0.1).sleep();  // 等待100ms后重试
   }
+
+  QMessageBox::warning(this, "Error", QString("Failed to connect to node %1 or get configuration").arg(QString::fromStdString(node_name)));
+
 }
 
 void ParamWidget::updateParamTree(const dynamic_reconfigure::Config& config) {
