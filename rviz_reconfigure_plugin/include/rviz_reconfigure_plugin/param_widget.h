@@ -5,6 +5,7 @@
 #include <QTreeWidget>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QMessageBox>
 #include <ros/ros.h>
 #include <dynamic_reconfigure/client.h>
 

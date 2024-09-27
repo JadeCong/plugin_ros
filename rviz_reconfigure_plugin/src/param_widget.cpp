@@ -1,6 +1,7 @@
 #include "rviz_reconfigure_plugin/param_widget.h"
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <QMessageBox>
 
 namespace rviz_reconfigure_plugin {
 
@@ -24,18 +25,22 @@ ParamWidget::ParamWidget(QWidget* parent) : QWidget(parent) {
   connect(param_tree_, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(onItemChanged(QTreeWidgetItem*, int)));
 }
 
-void ParamWidget::updateParams() {
+void ParamWidget::updateParams()
+{
   std::string node_name = node_name_edit_->text().toStdString();
-  
   client_.reset(new dynamic_reconfigure::Client<dynamic_reconfigure::Config>(node_name));
 
-  if (client_->isConnected()) {
+  // 使用 ros::Duration 来设置超时
+  ros::Duration timeout(5.0);  // 5秒超时
+  if (client_->waitForServer(timeout)) {
     dynamic_reconfigure::Config config;
-    client_->getConfiguration(config);
-    updateParamTree(config);
-  }
-  else {
-    ROS_ERROR_STREAM("Failed to connect to node " << node_name);
+    if (client_->get(config)) {
+      updateParamTree(config);
+    } else {
+      QMessageBox::warning(this, "Error", "Failed to get configuration from node.");
+    }
+  } else {
+    QMessageBox::warning(this, "Error", QString("Failed to connect to node %1").arg(QString::fromStdString(node_name)));
   }
 }
 
@@ -89,21 +94,21 @@ void ParamWidget::onItemChanged(QTreeWidgetItem* item, int column) {
     bool_param.name = name;
     bool_param.value = (item->checkState(1) == Qt::Checked);
     conf.bools.push_back(bool_param);
-  }
-  else if (item->text(1).contains('.')) {
+  } else if (item->text(1).contains('.')) {
     dynamic_reconfigure::DoubleParameter double_param;
     double_param.name = name;
     double_param.value = value.empty() ? 0 : std::stod(value);
     conf.doubles.push_back(double_param);
-  }
-  else {
+  } else {
     dynamic_reconfigure::IntParameter int_param;
     int_param.name = name;
     int_param.value = value.empty() ? 0 : std::stoi(value);
     conf.ints.push_back(int_param);
   }
 
-  client_->update(conf);
+  if (!client_->update(conf)) {
+    QMessageBox::warning(this, "Error", "Failed to update parameter.");
+  }
 }
 
 } // end namespace rviz_reconfigure_plugin
