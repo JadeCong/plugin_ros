@@ -37,20 +37,16 @@ void ParamWidget::updateParams()
 
   while (ros::Time::now() - start_time < timeout)
   {
-    if (client_->getCurrentConfiguration())
+    dynamic_reconfigure::Config config;
+    if (client_->getDefaultConfiguration(config))
     {
-      dynamic_reconfigure::Config config;
-      if (client_->getCurrentConfiguration(config))
-      {
-        updateParamTree(config);
-        return;
-      }
+      updateParamTree(config);
+      return;
     }
     ros::Duration(0.1).sleep();  // 等待100ms后重试
   }
 
   QMessageBox::warning(this, "Error", QString("Failed to connect to node %1 or get configuration").arg(QString::fromStdString(node_name)));
-
 }
 
 void ParamWidget::updateParamTree(const dynamic_reconfigure::Config& config) {
@@ -98,24 +94,34 @@ void ParamWidget::onItemChanged(QTreeWidgetItem* item, int column) {
 
   dynamic_reconfigure::Config conf;
 
-  if (item->checkState(1) != Qt::PartiallyChecked) {
+  if (item->checkState(1) != Qt::PartiallyChecked)
+  {
     dynamic_reconfigure::BoolParameter bool_param;
     bool_param.name = name;
     bool_param.value = (item->checkState(1) == Qt::Checked);
     conf.bools.push_back(bool_param);
-  } else if (item->text(1).contains('.')) {
+  }
+  else if (item->text(1).contains('.'))
+  {
     dynamic_reconfigure::DoubleParameter double_param;
     double_param.name = name;
     double_param.value = value.empty() ? 0 : std::stod(value);
     conf.doubles.push_back(double_param);
-  } else {
+  }
+  else
+  {
     dynamic_reconfigure::IntParameter int_param;
     int_param.name = name;
     int_param.value = value.empty() ? 0 : std::stoi(value);
     conf.ints.push_back(int_param);
   }
 
-  if (!client_->update(conf)) {
+  dynamic_reconfigure::ReconfigureRequest req;
+  dynamic_reconfigure::ReconfigureResponse res;
+  req.config = conf;
+
+  if (!ros::service::call(client_->getName() + "/set_parameters", req, res))
+  {
     QMessageBox::warning(this, "Error", "Failed to update parameter.");
   }
 }

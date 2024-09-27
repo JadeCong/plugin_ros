@@ -8,6 +8,7 @@
 #include <QMessageBox>
 #include <ros/ros.h>
 #include <dynamic_reconfigure/client.h>
+#include <dynamic_reconfigure/Reconfigure.h>
 
 namespace rviz_reconfigure_plugin {
 
