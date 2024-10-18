@@ -1,25 +1,40 @@
-#ifndef RECONFIGURE_PANEL_H
-#define RECONFIGURE_PANEL_H
+#ifndef DYNAMIC_RECONFIGURE_PANEL_H
+#define DYNAMIC_RECONFIGURE_PANEL_H
 
 #include <ros/ros.h>
 #include <rviz/panel.h>
-#include "param_widget.h"
+#include <dynamic_reconfigure/client.h>
+#include <QWidget>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QTreeWidget>
 
-namespace rviz_reconfigure_plugin {
+namespace rviz_dynamic_reconfigure_plugin {
 
-class ReconfigurePanel : public rviz::Panel {
+class DynamicReconfigurePanel : public rviz::Panel {
 Q_OBJECT
 public:
-  ReconfigurePanel(QWidget* parent = nullptr);
-  virtual ~ReconfigurePanel() override;
+  DynamicReconfigurePanel(QWidget* parent = 0);
 
-  virtual void load(const rviz::Config& config) override;
-  virtual void save(rviz::Config config) const override;
+  virtual void load(const rviz::Config& config);
+  virtual void save(rviz::Config config) const;
+
+public Q_SLOTS:
+  void updateNodeName();
+  void updateParams();
 
 protected:
-  ParamWidget* param_widget_;
+  QLineEdit* node_name_editor_;
+  QPushButton* update_button_;
+  QTreeWidget* param_tree_;
+
+  std::string node_name_;
+  boost::shared_ptr<dynamic_reconfigure::Client<dynamic_reconfigure::Config>> client_;
+
+  void displayParams(const dynamic_reconfigure::Config& config);
 };
 
-} // end namespace rviz_reconfigure_plugin
+} // end namespace rviz_dynamic_reconfigure_plugin
 
-#endif // RECONFIGURE_PANEL_H
+#endif // DYNAMIC_RECONFIGURE_PANEL_H
