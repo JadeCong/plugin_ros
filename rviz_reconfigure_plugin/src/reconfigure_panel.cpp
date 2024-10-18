@@ -1,5 +1,6 @@
 #include "rviz_reconfigure_plugin/reconfigure_panel.h"
 #include <QVBoxLayout>
+#include <pluginlib/class_list_macros.h>
 
 namespace rviz_reconfigure_plugin {
 
@@ -10,7 +11,9 @@ ReconfigurePanel::ReconfigurePanel(QWidget* parent) : rviz::Panel(parent) {
   setLayout(layout);
 }
 
-ReconfigurePanel::~ReconfigurePanel() {}
+ReconfigurePanel::~ReconfigurePanel() {
+  delete param_widget_;
+}
 
 void ReconfigurePanel::load(const rviz::Config& config) {
   rviz::Panel::load(config);
@@ -24,5 +27,4 @@ void ReconfigurePanel::save(rviz::Config config) const {
 
 } // end namespace rviz_reconfigure_plugin
 
-#include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(rviz_reconfigure_plugin::ReconfigurePanel, rviz::Panel)

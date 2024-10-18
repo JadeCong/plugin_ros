@@ -8,6 +8,7 @@ project(rviz_reconfigure_plugin)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
   pluginlib
   dynamic_reconfigure
   rviz
@@ -107,7 +108,7 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES rviz_reconfigure_plugin
-  CATKIN_DEPENDS pluginlib dynamic_reconfigure rviz qt_gui_cpp
+  CATKIN_DEPENDS roscpp pluginlib dynamic_reconfigure rviz qt_gui_cpp
 #  DEPENDS system_lib
 )
 
@@ -158,7 +159,7 @@ add_library(${PROJECT_NAME}
 # )
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
-  Qt5::Widgets
+  ${QT_LIBRARIES}
 )
 
 #############

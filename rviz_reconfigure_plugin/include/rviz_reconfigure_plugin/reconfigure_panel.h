@@ -10,11 +10,11 @@ namespace rviz_reconfigure_plugin {
 class ReconfigurePanel : public rviz::Panel {
 Q_OBJECT
 public:
-  ReconfigurePanel(QWidget* parent = 0);
-  virtual ~ReconfigurePanel();
+  ReconfigurePanel(QWidget* parent = nullptr);
+  virtual ~ReconfigurePanel() override;
 
-  virtual void load(const rviz::Config& config);
-  virtual void save(rviz::Config config) const;
+  virtual void load(const rviz::Config& config) override;
+  virtual void save(rviz::Config config) const override;
 
 protected:
   ParamWidget* param_widget_;
