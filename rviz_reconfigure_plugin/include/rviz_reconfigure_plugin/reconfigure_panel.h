@@ -11,6 +11,7 @@ class ReconfigurePanel : public rviz::Panel {
 Q_OBJECT
 public:
   ReconfigurePanel(QWidget* parent = 0);
+  virtual ~ReconfigurePanel();
 
   virtual void load(const rviz::Config& config);
   virtual void save(rviz::Config config) const;

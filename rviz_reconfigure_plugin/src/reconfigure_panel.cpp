@@ -5,17 +5,21 @@ namespace rviz_reconfigure_plugin {
 
 ReconfigurePanel::ReconfigurePanel(QWidget* parent) : rviz::Panel(parent) {
   QVBoxLayout* layout = new QVBoxLayout;
-  param_widget_ = new ParamWidget(this);
+  param_widget_ = new ParamWidget;
   layout->addWidget(param_widget_);
   setLayout(layout);
 }
 
+ReconfigurePanel::~ReconfigurePanel() {}
+
 void ReconfigurePanel::load(const rviz::Config& config) {
   rviz::Panel::load(config);
+  // Load any additional configuration if needed
 }
 
 void ReconfigurePanel::save(rviz::Config config) const {
   rviz::Panel::save(config);
+  // Save any additional configuration if needed
 }
 
 } // end namespace rviz_reconfigure_plugin
