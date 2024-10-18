@@ -159,7 +159,7 @@ add_library(${PROJECT_NAME}
 # )
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
-  ${QT_LIBRARIES}
+  Qt5::Widgets
 )
 
 #############
